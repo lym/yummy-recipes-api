@@ -1,0 +1,9 @@
+*.pyc
+.coverage
+.env/
+.cache/
+debug.log
+assets/
+tags
+.DS_Store
+bower_components
