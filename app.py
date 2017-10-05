@@ -2,7 +2,10 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 from models.base_model import db
-from controllers import UsersController
+from controllers import (
+    UsersController,
+    LoginController,
+)
 
 """ Database Configuration """
 
@@ -28,3 +31,4 @@ db.init_app(app)
 # db.create_all()
 api = Api(app)
 api.add_resource(UsersController, '/users/')
+api.add_resource(LoginController, '/login/')
