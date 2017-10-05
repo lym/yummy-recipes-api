@@ -1,21 +1,13 @@
-from sqlalchemy import (
-    Boolean,
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-)
-from .base_model import BaseModel
+from models.base_model import db as DB
 
 
-class Ingredient(BaseModel):
+class Ingredient(DB.Model):
     """ An ingredient belongs to a recipe """
-    __tablename__ = 'ingredients'
 
-    id = Column(Integer, primary_key=True)
-    recipe_id = Column(Integer, ForeignKey('recipes.id'))
-    title = Column(String)
-    description = Column(String)
+    id = DB.Column(DB.Integer, primary_key=True)
+    recipe_id = DB.Column(DB.Integer, DB.ForeignKey('recipe.id'))
+    title = DB.Column(DB.String)
+    description = DB.Column(DB.String)
 
     def __repr__(self):
         return "<Ingredient(ingredient_id='{}', recipe_id='{}', title='{}', description='{}')>".format(

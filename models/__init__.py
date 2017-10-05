@@ -9,3 +9,5 @@ __all__ = [
     'Instruction',
     'Ingredient',
 ]
+from flask_sqlalchemy import SQLAlchemy
+DB = SQLAlchemy()
