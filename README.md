@@ -55,6 +55,21 @@ Sample response:
         }
     ]
 
+### User Login
+Request format: `POST  http://127.0.0.1:5000/login/` with a JSON payload
+like:
+
+    {
+      "email": "auth_user@realemail.com",
+      "password": "weakpass"
+    }
+
+Sample Response:
+
+    {
+        "token": 1.74425898330645305300752607775784327253e+38
+    }
+
 ## Running the API server
 - Clone this repository
 - cd into the project directory
