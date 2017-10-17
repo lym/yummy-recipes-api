@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from models.base_model import db
 from controllers import (
     UsersController,
@@ -25,10 +26,14 @@ DATABASE_URL = "postgres://{}:{}@{}:{}/{}".format(
 
 app = Flask('yummy_recipes_api')
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db = SQLAlchemy(app)
 db.app = app
 db.init_app(app)
-# db.create_all()
+db.create_all()
 api = Api(app)
+
+migrate = Migrate(app, db)
+
 api.add_resource(UsersController, '/users/')
 api.add_resource(LoginController, '/login/')
