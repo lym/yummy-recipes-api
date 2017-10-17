@@ -70,12 +70,37 @@ Sample Response:
         "token": 1.74425898330645305300752607775784327253e+38
     }
 
-## Running the API server
+## Development environment setup
+### Project source code setup
 - Clone this repository
 - cd into the project directory
 - Create a virtual environment
-- Run pip install agaist `requirements.txt`
+- Activate the virtual environment
+- Run pip install against `requirements.txt`
+
+### Database Setup
+- Create a database in PostgreSQL for the project with:
+
+    $ createdb yummy_recipes
+
+- Login into the database, via psql for example, and create a <i>yummy
+  recipes</i> user with the SQL statement:
+
+    CREATE USER yummy_recipes WITH PASSWORD 'weakpass';
+
+- Set the owner of the *yummy_recipes* database to this new user with
+the SQL statement:
+
+    ALTER DATABASE yummy_recipes OWNER TO yummy_recipes;
+
+- Set up initial state of the database with:
+
+    FLASK_DEBUG=3 FLASK_APP=app.py flask db upgrade`
+
+### Starting the API server
 - Start the server with `FLASK_DEBUG=3 FLASK_APP=app.py flask run`
   (Debug level 3 for extra verbosity)
+
+### Interacting with the server
 - Issue requests against the server using a tool like <i>curl</i> or
-  postman
+  <i>postman</i>
