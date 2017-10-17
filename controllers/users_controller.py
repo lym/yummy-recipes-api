@@ -14,10 +14,6 @@ class UsersController(MethodView):
     """ Controller for the user resource """
     def post(self):
         """ User registration """
-        # print(request.get_json())
-        # print("First Name: {}".format(request.get_json().get('first_name')))
-        # print("Last Name: {}".format(request.get_json().get('last_name')))
-        # return jsonify({'status': 201})
         first_name = request.get_json().get('first_name')
         last_name = request.get_json().get('last_name')
         username = request.get_json().get('username')
@@ -28,12 +24,8 @@ class UsersController(MethodView):
                 len(password.split()) == 0):
             # abort(status.HTTP_400_BAD_REQUEST)
             return jsonify({'status': 400})
+
         # Check if user already exists
-        """
-        if User.valid_user(email, password):
-            print('User already exists!')
-            abort(status.HTTP_400_BAD_REQUEST)
-        """
         existant_user = User.query.filter_by(email=email).first()
         if (existant_user is not None) and (existant_user.email == email):
             print('User already exists!')
@@ -45,7 +37,7 @@ class UsersController(MethodView):
 
         DB.session.add(new_user)
         DB.session.commit()
-        res = {'status': 201} 
+        res = {'status': 201}
         return jsonify(res)
 
     def get(self):
