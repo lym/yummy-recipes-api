@@ -1,12 +1,14 @@
 from models.base_model import db as DB
+from .timestamp_mixin import TimestampMixin
 
 
-class Ingredient(DB.Model):
+class Ingredient(TimestampMixin, DB.Model):
     """ An ingredient belongs to a recipe """
+    __tablename__ = 'ingredients'
 
-    id = DB.Column(DB.Integer, primary_key=True)
-    recipe_id = DB.Column(DB.Integer, DB.ForeignKey('recipe.id'))
-    title = DB.Column(DB.String)
+    idi         = DB.Column(DB.Integer, primary_key=True)
+    recipe_id   = DB.Column(DB.Integer, DB.ForeignKey('recipes.id'))
+    title       = DB.Column(DB.String)
     description = DB.Column(DB.String)
 
     def __repr__(self):

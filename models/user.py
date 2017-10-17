@@ -1,8 +1,9 @@
 from models.base_model import db as DB
+from .timestamp_mixin import TimestampMixin
 
 
-class User(DB.Model):
-    # __tablename__ = 'users'
+class User(TimestampMixin, DB.Model):
+    __tablename__ = 'users'
 
     id          = DB.Column(DB.Integer, primary_key=True)
     first_name  = DB.Column(DB.String)
