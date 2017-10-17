@@ -125,4 +125,5 @@ def test_user_deletion():
 
     assert User.query.filter_by(username=username).first().username == username
     DB.session.delete(user)
+    DB.session.commit()
     assert User.query.filter_by(username=username).first().username != username
