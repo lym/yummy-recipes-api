@@ -14,11 +14,11 @@ class LoginController(MethodView):
         email = request.get_json().get('email')
         passw = request.get_json().get('password')
         existant_user = User.query.filter_by(email=email).first()
+        if existant_user is None:
+            abort(401)
         if (existant_user.email == email) and (existant_user.password == passw):
             # FIXME: This will be the users token property
             token = int(uuid.uuid4())
             res = {'token': token}
             return jsonify(res)
-
-        print('Email: {}\nPass: {}'.format(email, passw))
         abort(401)
