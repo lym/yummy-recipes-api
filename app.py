@@ -6,6 +6,7 @@ from models.base_model import db
 from controllers import (
     UsersController,
     LoginController,
+    RecipesController,
 )
 
 """ Database Configuration """
@@ -37,3 +38,4 @@ migrate = Migrate(app, db)
 
 api.add_resource(UsersController, '/users/')
 api.add_resource(LoginController, '/login/')
+api.add_resource(RecipesController, '/recipes/')
