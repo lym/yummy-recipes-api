@@ -8,6 +8,7 @@ from controllers import (
     LoginController,
     RecipesController,
     InstructionsController,
+    IngredientsController,
 )
 
 """ Database Configuration """
@@ -41,3 +42,4 @@ api.add_resource(UsersController, '/users/')
 api.add_resource(LoginController, '/login/')
 api.add_resource(RecipesController, '/recipes/')
 api.add_resource(InstructionsController, '/instructions/')
+api.add_resource(IngredientsController, '/ingredients/')
