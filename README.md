@@ -95,7 +95,7 @@ the SQL statement:
 
 - Set up initial state of the database with:
 
-    FLASK_DEBUG=3 FLASK_APP=app.py flask db upgrade`
+     FLASK_DEBUG=3 FLASK_APP=app.py flask db upgrade
 
 ### Starting the API server
 - Start the server with `FLASK_DEBUG=3 FLASK_APP=app.py flask run`
