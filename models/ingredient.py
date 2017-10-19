@@ -6,8 +6,8 @@ class Ingredient(TimestampMixin, DB.Model):
     """ An ingredient belongs to a recipe """
     __tablename__ = 'ingredients'
 
-    idi         = DB.Column(DB.Integer, primary_key=True)
-    recipe_id   = DB.Column(DB.Integer, DB.ForeignKey('recipes.id'))
+    id          = DB.Column(DB.Integer, primary_key=True)
+    recipe_id   = DB.Column(DB.Integer, DB.ForeignKey('recipes.id'), nullable=False)
     title       = DB.Column(DB.String)
     description = DB.Column(DB.String)
 
