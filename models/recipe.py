@@ -16,6 +16,7 @@ class Recipe(TimestampMixin, DB.Model):
     fulfilled   = DB.Column(DB.Boolean)
 
     instructions = DB.relationship('Instruction', backref='recipe', lazy=True)
+    ingredients = DB.relationship('Ingredient', backref='recipe', lazy=True)
 
 
     def __repr__(self):
