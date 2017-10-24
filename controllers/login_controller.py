@@ -1,4 +1,3 @@
-import uuid
 from flask import (
     abort,
     jsonify,
@@ -17,8 +16,7 @@ class LoginController(MethodView):
         if existant_user is None:
             abort(401)
         if (existant_user.email == email) and (existant_user.password == passw):
-            # FIXME: This will be the users token property
-            token = int(uuid.uuid4())
+            token = existant_user.auth_token
             res = {'token': token}
             return jsonify(res)
         abort(401)
