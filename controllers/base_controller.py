@@ -13,8 +13,18 @@ class BaseController:
         The Authorization header takes the form:
             Authorization: Token <token value>
         """
-        token = req.headers.get('Authorization').split(sep=' ')[-1]
+        auth_value = req.headers.get('Authorization')
+        if auth_value is None:  # No Auth header so request is invalid
+            return False
+        token = auth_value.split(sep=' ')[-1]
         existant_user = User.query.filter_by(auth_token=token).first()
         if existant_user is None:
             return False
         return True
+
+    def get_auth_token(req):
+        auth_value = req.headers.get('Authorization')
+        if auth_value is None:
+            return None
+        auth_token = auth_value.split(sep=' ')[-1]
+        return auth_token
