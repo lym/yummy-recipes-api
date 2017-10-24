@@ -11,6 +11,7 @@ class User(TimestampMixin, DB.Model):
     username    = DB.Column(DB.String)
     email       = DB.Column(DB.String, unique=True)
     password    = DB.Column(DB.String)
+    auth_token  = DB.Column(DB.String, nullable=False, unique=True)
 
     recipes = DB.relationship('Recipe', backref='user', lazy=True)
 
