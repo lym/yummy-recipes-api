@@ -1,17 +1,26 @@
+import hashlib
 from flask import (
     abort,
     request,
     jsonify,
 )
 from flask.views import MethodView
-# from flask_api import status
 
 from models import User
 from models.base_model import db as DB
+from .base_controller import BaseController
 
 
 class UsersController(MethodView):
     """ Controller for the user resource """
+
+    def _make_token(self, email):
+        bytes_token = email.encode()
+        message = hashlib.sha256()
+        message.update(bytes_token)
+        token = message.hexdigest()[0:40]
+        return token
+
     def post(self):
         """ User registration """
         first_name = request.get_json().get('first_name')
@@ -19,21 +28,23 @@ class UsersController(MethodView):
         username = request.get_json().get('username')
         email   = request.get_json().get('email')
         password = request.get_json().get('password')
+        token = self._make_token(email)
         # Check for required fields
         if (len(email.split()) == 0 or
                 len(password.split()) == 0):
-            # abort(status.HTTP_400_BAD_REQUEST)
             return jsonify({'status': 400})
 
         # Check if user already exists
         existant_user = User.query.filter_by(email=email).first()
         if (existant_user is not None) and (existant_user.email == email):
-            print('User already exists!')
+            print('User already exists!')  # Debug statement
             res = jsonify({'status': 400})
             abort(res)
 
-        new_user = User(email=email, password=password, first_name=first_name,
-                        last_name=last_name, username=username)
+        new_user = User(
+            email=email, password=password, first_name=first_name,
+            last_name=last_name, username=username, auth_token=token
+        )
 
         DB.session.add(new_user)
         DB.session.commit()
@@ -41,6 +52,8 @@ class UsersController(MethodView):
         return jsonify(res)
 
     def get(self):
+        if not BaseController.authorized(request):
+            abort(401)
         users = User.query.all()
         content = []
         for user in users:
@@ -53,5 +66,4 @@ class UsersController(MethodView):
             }
             content.append(record)
         res = jsonify(content)
-        # users = jsonify(User.all())
         return res
