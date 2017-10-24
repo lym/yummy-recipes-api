@@ -10,11 +10,18 @@ from models import (
     User,
 )
 from models.base_model import db as DB
+from .base_controller import BaseController
 
 
 class RecipesController(MethodView):
-    """ Controller for the user resource """
+    """ Controller for the recipe resource
+    Any User can create a resource but a User can only GET/DELETE/PUT/PATCH
+    a recipe that they own
+    """
     def post(self):
+        if not BaseController.authorized(request):
+            abort(401)
+
         """ Recipe Creation """
         user_id = int(request.get_json().get('user_id'))
         title   = request.get_json().get('title')
@@ -31,6 +38,12 @@ class RecipesController(MethodView):
             print('Recipe owner does not exist!')
             res = jsonify({'status': 400})
             abort(res)
+
+        # Check if recipe owner is originator of request
+        req_token = BaseController.get_auth_token(request)
+        token_owner = User.query.filter_by(auth_token=req_token).first()
+        if user_id != token_owner.id:
+            abort(400)
 
         # Check if recipe already exists
         existant_recipe = Recipe.query.filter_by(title=title.lower()).first()
@@ -52,8 +65,15 @@ class RecipesController(MethodView):
 
 
     def get(self):
+        if not BaseController.authorized(request):
+            abort(401)
+        user_token = BaseController.get_auth_token(request)
+        if user_token is None:
+            abort(401)
+        user = User.query.filter_by(auth_token=user_token).first()
+
         """ Recipe retrieval """
-        recipes = Recipe.query.all()
+        recipes = Recipe.query.filter_by(user_id=user.id)
         content = []
         for recipe in recipes:
             record = {
