@@ -8,6 +8,7 @@ from app import db as DB
 def test_default_attributes():
     assert User.__tablename__ is not None
 
+
 def create_test_user():
     """ Create test user """
     first_name  = 'First'
@@ -22,7 +23,7 @@ def create_test_user():
         last_name=last_name,
         username=username,
         email=email,
-        password=password
+        password=password,
         auth_token=token
     )
 
@@ -60,7 +61,7 @@ def test_user_update():
         last_name=last_name,
         username=username,
         email=email,
-        password=password
+        password=password,
         auth_token=token
     )
 
@@ -76,8 +77,9 @@ def test_user_update():
     DB.session.commit()
 
     # Retrieve newly-update user so we can verify the field new field value
-    updated_user = User.query.filter_by(username=retrieved_user.username).first()
+    updated_user = User.query.filter_by(username=retrieved_user.username).first()  # NOQA
     assert updated_user.last_name == retrieved_user.last_name
+
 
 def test_user_deletion():
     """ It should delete a user from the system """
@@ -94,7 +96,8 @@ def test_user_deletion():
         last_name=last_name,
         username=username,
         email=email,
-        password=password
+        password=password,
+        auth_token=token
     )
 
     # Persist the user in the database
