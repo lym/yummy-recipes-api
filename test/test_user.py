@@ -56,7 +56,7 @@ def test_user_update():
     username    = 'jsmith'
     email       = 'jsmith@anonmail.com'
     password    = 'weakpass'
-    token       = '3ak54ad9' * 5  # 40-character token
+    token       = '4bd65be1' * 5  # 40-character token
 
     user = User(
         first_name=first_name,
@@ -86,12 +86,12 @@ def test_user_update():
 def test_user_deletion():
     """ It should delete a user from the system """
 
-    first_name  = 'John'
-    last_name   = 'Smith'
-    username    = 'jsmith'
-    email       = 'jsmith200@anonmail.com'
+    first_name  = 'Jane'
+    last_name   = 'Doe'
+    username    = 'jdoe'
+    email       = 'jdoe@anonmail.com'
     password    = 'weakpass'
-    token       = '3ak54ad9' * 5  # 40-character token
+    token       = '3ak76ca5' * 5  # 40-character token
 
     user = User(
         first_name=first_name,
