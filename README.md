@@ -90,6 +90,18 @@ Sample response:
         "username": "jdoe"
     }
 
+### User Deletion
+Please note that a user may only delete their own user record. Also
+deleting a user, purges all their recipes, instructions and ingredients.
+
+Sample request: `DELETE  http://127.0.0.1:5000/users/<user_id>/`
+
+Sample response:
+
+    {
+        "status": 204
+    }
+
 ### Recipe creation
 Sample request: `POST http://127.0.0.1:5000/recipes/` with a JSON
 payload like:
