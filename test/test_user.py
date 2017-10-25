@@ -38,6 +38,8 @@ def test_user_retrieval():  # Test got GET /endpoint/users/id/
     create_test_user()
     jane = User.query.filter_by(username='username').first()
     assert jane.id is not None
+    assert jane.created is not None
+    assert jane.modified is not None
     assert jane.first_name == 'First'
     assert jane.last_name == 'Last'
     assert jane.email == 'email@anonmail.com'
