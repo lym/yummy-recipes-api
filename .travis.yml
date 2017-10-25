@@ -2,5 +2,15 @@ language: python
 python:
     - 3.6
     - nightly
+
+services:
+    - postgresql
+
+before_script:
+    - psql -c 'CREATE DATABASE yummy_recipes;' -U postgres
+    - psql -c "CREATE USER yummy_recipes WITH PASSWORD 'weakpass';" -U postgres
+    - psql -c "ALTER DATABASE yummy_recipes OWNER TO yummy_recipes;" -U postgres
+
 script:
+    - FLASK_APP=app.py flask db upgrade
     - PYTHON_PATH=. pytest -r Pf --cov=.
