@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from models.base_model import db
 from controllers import (
     UsersController,
+    UsersShowController,
     LoginController,
     RecipesController,
     InstructionsController,
@@ -39,6 +40,7 @@ api = Api(app)
 migrate = Migrate(app, db)
 
 api.add_resource(UsersController, '/users/')
+api.add_resource(UsersShowController, '/users/<int:user_id>/')
 api.add_resource(LoginController, '/login/')
 api.add_resource(RecipesController, '/recipes/')
 api.add_resource(InstructionsController, '/instructions/')

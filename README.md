@@ -77,6 +77,19 @@ Sample response:
         }
     ]
 
+### Individual user retrieval
+Sample request: `GET  http://127.0.0.1:5000/users/<user_id>/`
+
+Sample response:
+
+    {
+        "email": "jdoe@anonpersons.com",
+        "first_name": "Jane",
+        "id": 1,
+        "last_name": "Doe",
+        "username": "jdoe"
+    }
+
 ### Recipe creation
 Sample request: `POST http://127.0.0.1:5000/recipes/` with a JSON
 payload like:
