@@ -8,14 +8,14 @@ from app import db as DB
 def test_default_attributes():
     assert User.__tablename__ is not None
 
-
-def test_user_create():
-    """ It should create a new user """
+def create_test_user():
+    """ Create test user """
     first_name  = 'First'
     last_name   = 'Name'
     username    = 'username'
     email       = 'email@anonmail.com'
     password    = 'weakpass'
+    token       = '3ak54ad9' * 5  # 40-character token
 
     user = User(
         first_name=first_name,
@@ -23,13 +23,8 @@ def test_user_create():
         username=username,
         email=email,
         password=password
+        auth_token=token
     )
-
-    assert user.first_name == first_name
-    assert user.last_name == last_name
-    assert user.username == username
-    assert user.email ==  email
-    assert user.password == password
 
     # Persist the user in the database
     DB.session.add(user)
@@ -39,32 +34,12 @@ def test_user_create():
 def test_user_retrieval():  # Test got GET /endpoint/users/id/
     """ It should return a user given the user's identification """
 
-    DB.drop_all()
-    DB.create_all()
-
-    first_name  = 'Jane'
-    last_name   = 'Doe'
-    username    = 'jdoe'
-    email       = 'jdoe@anonpersons.com'
-    password    = 'weakerpass'
-
-    user = User(
-        first_name=first_name,
-        last_name=last_name,
-        username=username,
-        email=email,
-        password=password
-    )
-
-    # Persist the user in the database
-    DB.session.add(user)
-    DB.session.commit()
-
-    jane = User.query.filter_by(username='jdoe').first()
+    create_test_user()
+    jane = User.query.filter_by(username='username').first()
     assert jane.id is not None
-    assert jane.first_name == first_name
-    assert jane.last_name == last_name
-    assert jane.email == email
+    assert jane.first_name == 'First'
+    assert jane.last_name == 'Last'
+    assert jane.email == 'email@anonmail.com'
 
     # Attempt to search for an invalid user
     bad_user = User.query.filter_by(username='bad_user').first()
@@ -78,6 +53,7 @@ def test_user_update():
     username    = 'jsmith'
     email       = 'jsmith@anonmail.com'
     password    = 'weakpass'
+    token       = '3ak54ad9' * 5  # 40-character token
 
     user = User(
         first_name=first_name,
@@ -85,6 +61,7 @@ def test_user_update():
         username=username,
         email=email,
         password=password
+        auth_token=token
     )
 
     # Persist the user in the database
@@ -110,6 +87,7 @@ def test_user_deletion():
     username    = 'jsmith'
     email       = 'jsmith200@anonmail.com'
     password    = 'weakpass'
+    token       = '3ak54ad9' * 5  # 40-character token
 
     user = User(
         first_name=first_name,
