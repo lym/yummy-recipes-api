@@ -10,11 +10,17 @@ from models import (
     Recipe,
 )
 from models.base_model import db as DB
+from .base_controller import BaseController
 
 
 class InstructionsController(MethodView):
-    """ Controller for the instructions resource """
+    """ Controller for the instructions resource
+    A User may only add instructions to recipes that they own.
+    """
     def post(self):
+        if not BaseController.authorized(request):
+            abort(401)
+
         """ Instruction Creation """
         recipe_id   = int(request.get_json().get('recipe_id'))
         title       = request.get_json().get('title')
@@ -30,6 +36,10 @@ class InstructionsController(MethodView):
             print('The recipe attached to instruction does not exist!')
             res = jsonify({'status': 400})
             abort(res)
+
+        # Check if recipe attached to request belongs to the requester
+        if not BaseController.authorized_and_owns_recipe(request, recipe_id):
+            abort(401)
 
         # Check if instruction already exists
         existant_instruction = Instruction.query.filter_by(
@@ -54,6 +64,9 @@ class InstructionsController(MethodView):
         return jsonify(res)
 
     def get(self):
+        if not BaseController.authorized(request):
+            abort(401)
+
         """ Recipe retrieval """
         instructions = Instruction.query.all()
         content = []
