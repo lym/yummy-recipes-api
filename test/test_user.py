@@ -12,7 +12,7 @@ def test_default_attributes():
 def create_test_user():
     """ Create test user """
     first_name  = 'First'
-    last_name   = 'Name'
+    last_name   = 'Last'
     username    = 'username'
     email       = 'email@anonmail.com'
     password    = 'weakpass'
