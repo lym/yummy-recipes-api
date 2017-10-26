@@ -13,9 +13,8 @@ from .base_controller import BaseController
 class UsersShowController(MethodView):
     """ Handles requests for a single user entity """
     def get(self, user_id):
-        print('Requested User ID is: {}'.format(user_id))
         if not BaseController.authorized(request):
-            abort(401)
+            abort(401, 'Please supply authentication credentials')
         user_id = int(user_id)
         user = User.query.filter_by(id=user_id).first()
         if user is None:
