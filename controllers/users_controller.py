@@ -24,7 +24,7 @@ class UsersController(MethodView):
     def post(self):
         """ User registration """
         if request.get_json() is None:
-            abort(400)
+            abort(400, 'Please supply user credentials as JSON')
         first_name = request.get_json().get('first_name')
         last_name = request.get_json().get('last_name')
         username = request.get_json().get('username')
@@ -39,9 +39,7 @@ class UsersController(MethodView):
         # Check if user already exists
         existant_user = User.query.filter_by(email=email).first()
         if (existant_user is not None) and (existant_user.email == email):
-            print('User already exists!')  # Debug statement
-            res = jsonify({'status': 400})
-            abort(res)
+            abort(400, 'User already exists!')
 
         new_user = User(
             email=email, password=password, first_name=first_name,
