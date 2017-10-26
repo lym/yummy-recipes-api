@@ -16,5 +16,5 @@ class Instruction(TimestampMixin, DB.Model):
     description = DB.Column(DB.String)
 
     def __repr__(self):
-        return "<Instruction(instruction_id='{}', recipe_id='{}', title='{}', description='{}')>".format(
-                                self.id, self.recipe_id, self.title, self.description)
+        return "<Instruction(instruction_id='{}', recipe_id='{}', title='{}', description='{}')>".format(  # NOQA
+                                self.id, self.recipe_id, self.title, self.description)  # NOQA

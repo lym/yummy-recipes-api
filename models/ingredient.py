@@ -7,10 +7,12 @@ class Ingredient(TimestampMixin, DB.Model):
     __tablename__ = 'ingredients'
 
     id          = DB.Column(DB.Integer, primary_key=True)
-    recipe_id   = DB.Column(DB.Integer, DB.ForeignKey('recipes.id'), nullable=False)
+    recipe_id   = DB.Column(
+        DB.Integer, DB.ForeignKey('recipes.id'), nullable=False
+    )
     title       = DB.Column(DB.String)
     description = DB.Column(DB.String)
 
     def __repr__(self):
-        return "<Ingredient(ingredient_id='{}', recipe_id='{}', title='{}', description='{}')>".format(
-                                self.id, self.recipe_id, self.title, self.description)
+        return "<Ingredient(ingredient_id='{}', recipe_id='{}', title='{}', description='{}')>".format(  # NOQA
+                                self.id, self.recipe_id, self.title, self.description)  # NOQA

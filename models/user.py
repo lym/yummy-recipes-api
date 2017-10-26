@@ -15,7 +15,6 @@ class User(TimestampMixin, DB.Model):
 
     recipes = DB.relationship('Recipe', backref='user', lazy=True)
 
-
     def __repr__(self):
         return "<User(fullname='{}', email='{}', password='{}')>".format(
                                 (self.first_name.capitalize() + ' ' + self.last_name.capitalize()),  # NOQA

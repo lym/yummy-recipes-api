@@ -10,7 +10,9 @@ class Recipe(TimestampMixin, DB.Model):
     __tablename__ = 'recipes'
 
     id          = DB.Column(DB.Integer, primary_key=True)
-    user_id     = DB.Column(DB.Integer, DB.ForeignKey('users.id'), nullable=False)
+    user_id     = DB.Column(
+        DB.Integer, DB.ForeignKey('users.id'), nullable=False
+    )
     title       = DB.Column(DB.String)
     description = DB.Column(DB.String)
     fulfilled   = DB.Column(DB.Boolean)
@@ -18,7 +20,7 @@ class Recipe(TimestampMixin, DB.Model):
     instructions = DB.relationship('Instruction', backref='recipe', lazy=True)
     ingredients = DB.relationship('Ingredient', backref='recipe', lazy=True)
 
-
     def __repr__(self):
         return "<Recipe(user_id='{}', title='{}', description='{}')>".format(
-                                self.user_id, self.title, self.description)
+               self.user_id, self.title, self.description
+        )
