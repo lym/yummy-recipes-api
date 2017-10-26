@@ -8,7 +8,10 @@ from flask.views import MethodView
 
 from models import User
 from models.base_model import db as DB
-from .base_controller import BaseController
+from .base_controller import (
+    BaseController,
+    UsersEndpoint,
+)
 
 
 class UsersController(MethodView):
@@ -20,6 +23,10 @@ class UsersController(MethodView):
         message.update(bytes_token)
         token = message.hexdigest()[0:40]
         return token
+
+    def _make_self_link(self, user):
+        link = UsersEndpoint + str(user.id) + '/'
+        return link
 
     def post(self):
         """ User registration """
@@ -53,7 +60,7 @@ class UsersController(MethodView):
 
     def get(self):
         if not BaseController.authorized(request):
-            abort(401)
+            abort(401, 'Please provide valid user token')
         result_count = request.args.get('limit')
         if result_count is None:
             users = User.query.all()
@@ -64,7 +71,11 @@ class UsersController(MethodView):
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'email': user.email,
-                    'username': user.username
+                    'username': user.username,
+                    'links': {
+                        'self': self._make_self_link(user)
+                    }
+
                 }
                 content.append(record)
             res = jsonify(content)
@@ -77,7 +88,10 @@ class UsersController(MethodView):
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'email': user.email,
-                'username': user.username
+                'username': user.username,
+                'links': {
+                    'self': self._make_self_link(user)
+                }
             }
             content.append(record)
         res = jsonify(content)
