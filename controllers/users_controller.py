@@ -23,6 +23,8 @@ class UsersController(MethodView):
 
     def post(self):
         """ User registration """
+        if request.get_json() is None:
+            abort(400)
         first_name = request.get_json().get('first_name')
         last_name = request.get_json().get('last_name')
         username = request.get_json().get('username')
