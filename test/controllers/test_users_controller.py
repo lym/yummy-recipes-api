@@ -29,10 +29,19 @@ def test_user_list_pagination():
     """ It should return paginated list of users """
     limit = 1
     url = 'http://127.0.0.1:5000/users/?limit={}'.format(limit)
-    headers = {
-        'Authorization': 'Token c198ecbca9af5bbe7ba50ec6a4f4df1ffbf5d004'
+    login_url     = 'http://127.0.0.1:5000/login/'
+
+    user_credentials = {
+        "email"     : "smarat@atptour.com",
+        "password"  : "testpass"
     }
-    req = requests.get(url, headers=headers)
+    auth_token = requests.post(
+        login_url, json=user_credentials
+    ).json().get('token')
+    auth_headers = {
+        'Authorization': 'Token {}'.format(auth_token)
+    }
+    req = requests.get(url, headers=auth_headers)
 
     assert req.status_code == 200
     assert req.json().__len__() == limit
