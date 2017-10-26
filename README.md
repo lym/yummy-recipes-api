@@ -111,6 +111,16 @@ Sample response:
 
 If no matches are found, an empty list/array is returned.
 
+### User list pagination
+Clients can specify a limit on the number of results that they wish to
+receive when the request for a list of users, via the limit parameter.
+
+Sample request `GET http://127.0.0.1:5000/users/?limit=<limit>`
+
+The response will be like the response for a request for a normal
+request for the user list except the length of the results arrays will
+be `limit`
+
 ### User Deletion
 Please note that a user may only delete their own user record. Also
 deleting a user, purges all their recipes, instructions and ingredients.

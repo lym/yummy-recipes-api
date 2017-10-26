@@ -54,7 +54,22 @@ class UsersController(MethodView):
     def get(self):
         if not BaseController.authorized(request):
             abort(401)
-        users = User.query.all()
+        result_count = request.args.get('limit')
+        if result_count is None:
+            users = User.query.all()
+            content = []
+            for user in users:
+                record = {
+                    'id': user.id,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'email': user.email,
+                    'username': user.username
+                }
+                content.append(record)
+            res = jsonify(content)
+            return res
+        users = User.query.limit(int(result_count)).all()
         content = []
         for user in users:
             record = {
