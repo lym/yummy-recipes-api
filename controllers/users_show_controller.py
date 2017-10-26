@@ -43,7 +43,7 @@ class UsersShowController(MethodView):
         # Ensure a user is deleting their own user record
         curr_user = BaseController.auth_user(request)
         if curr_user.id != user.id:
-            abort(403)
+            abort(403, 'A user can only delete their own user record!')
         recipes = user.recipes
         if recipes != []:
             for recipe in recipes:
