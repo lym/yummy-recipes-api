@@ -13,5 +13,5 @@ before_script:
 
 script:
     - FLASK_APP=app.py flask db upgrade
-    - FLASK_DEBUG=3 FLASK_APP=app.py flask run
+    - FLASK_APP=app.py flask run &
     - PYTHON_PATH=. pytest -r Pf --cov=.
