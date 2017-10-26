@@ -8,6 +8,7 @@ from controllers import (
     UserSearchController,
     LoginController,
     RecipesController,
+    RecipesShowController,
     InstructionsController,
     IngredientsController,
 )
@@ -42,6 +43,7 @@ api.add_resource(UsersController, '/users/')
 api.add_resource(UsersShowController, '/users/<int:user_id>/')
 api.add_resource(LoginController, '/login/')
 api.add_resource(RecipesController, '/recipes/')
+api.add_resource(RecipesShowController, '/recipes/<int:recipe_id>/')
 api.add_resource(InstructionsController, '/instructions/')
 api.add_resource(IngredientsController, '/ingredients/')
 api.add_resource(UserSearchController, '/search/users')
