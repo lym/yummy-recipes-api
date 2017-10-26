@@ -30,7 +30,7 @@ class RecipesController(MethodView):
 
         # Check for required fields
         if user_id is None:
-            abort(400)
+            abort(400, 'Please attach a user to this recipe')
 
         # Check if recipe owner exists
         existant_user = User.query.filter_by(id=user_id).first()
@@ -43,7 +43,7 @@ class RecipesController(MethodView):
         req_token = BaseController.get_auth_token(request)
         token_owner = User.query.filter_by(auth_token=req_token).first()
         if user_id != token_owner.id:
-            abort(400)
+            abort(400, 'Recipe owner/Token owner mismatch')
 
         # Check if recipe already exists
         existant_recipe = Recipe.query.filter_by(title=title.lower()).first()
