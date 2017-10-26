@@ -4,6 +4,13 @@ from models import (
 )
 
 
+RootEndpoint = 'http://127.0.0.1:5000'
+UsersEndpoint = RootEndpoint + '/users/'
+RecipesEndpoint = RootEndpoint + '/recipes/'
+InstructionsEndpoint = RootEndpoint + '/instructions/'
+IngredientsEndpoint = RootEndpoint + '/ingredients/'
+
+
 class BaseController:
     def authorized(req):
         """ Probes a request object's headers for the Authorization value, a
