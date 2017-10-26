@@ -6,6 +6,7 @@ from models.base_model import db
 from controllers import (
     UsersController,
     UsersShowController,
+    UserSearchController,
     LoginController,
     RecipesController,
     InstructionsController,
@@ -45,3 +46,4 @@ api.add_resource(LoginController, '/login/')
 api.add_resource(RecipesController, '/recipes/')
 api.add_resource(InstructionsController, '/instructions/')
 api.add_resource(IngredientsController, '/ingredients/')
+api.add_resource(UserSearchController, '/search/users')

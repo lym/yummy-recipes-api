@@ -20,6 +20,7 @@ flask-restful==0.3.6
 flask-shell-bpython==0.0.1
 flask-sqlalchemy==2.3.0
 flask==0.12.2
+fuzzywuzzy==0.15.1
 greenlet==0.4.12          # via bpython
 gunicorn==19.7.1
 idna==2.6                 # via requests
@@ -38,6 +39,7 @@ pytest-cov==2.5.1
 pytest==3.1.3
 python-dateutil==2.6.1    # via alembic, aniso8601
 python-editor==1.0.3      # via alembic
+python-levenshtein==0.12.0
 pytz==2017.2
 requests==2.18.4          # via bpython
 six==1.11.0               # via bpython, flask-restful, pip-tools, python-dateutil
