@@ -90,6 +90,27 @@ Sample response:
         "username": "jdoe"
     }
 
+### User Search
+Clients have the ability to search users based on the name.
+
+Sample request `GET http://127.0.0.1:5000/search/users?q=<search term>`
+
+Sample response:
+
+    [
+        {
+            "created": "Wed, 25 Oct 2017 18:05:29 GMT",
+            "email": "lilk@badboyent.com",
+            "first_name": "Lil",
+            "id": 3,
+            "last_name": "Kim",
+            "modified": null,
+            "username": "lilk"
+        }
+    ]
+
+If no matches are found, an empty list/array is returned.
+
 ### User Deletion
 Please note that a user may only delete their own user record. Also
 deleting a user, purges all their recipes, instructions and ingredients.
@@ -101,6 +122,7 @@ Sample response:
     {
         "status": 204
     }
+
 
 ### Recipe creation
 Sample request: `POST http://127.0.0.1:5000/recipes/` with a JSON
