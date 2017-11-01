@@ -10,12 +10,14 @@ from models import User
 
 class LoginController(MethodView):
     def post(self):
-        if request.get_json() is None:
+        # Allow either form-encoded or raw JSON strings
+        user_credentials = request.get_json() or request.form
+        if user_credentials is None:
             abort(400, 'Please supply email and password')
-        email = request.get_json().get('email')
+        email = user_credentials.get('email')
         if email is None:
             abort(400, 'You need to supply an email address')
-        passw = request.get_json().get('password')
+        passw = user_credentials.get('password')
         if passw is None:
             abort(400, 'You need to supply a password')
         existant_user = User.query.filter_by(email=email).first()
