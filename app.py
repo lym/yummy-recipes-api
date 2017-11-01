@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from flask_migrate import Migrate
+from flask_cors import CORS
 from models.base_model import db
 from controllers import (
     UsersController,
@@ -38,6 +39,7 @@ db.create_all()
 api = Api(app)
 
 migrate = Migrate(app, db)
+CORS(app)  # Enable CORS on all our endpoints
 
 api.add_resource(UsersController, '/users/')
 api.add_resource(UsersShowController, '/users/<int:user_id>/')

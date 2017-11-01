@@ -15,6 +15,7 @@ coverage==4.4.1           # via pytest-cov
 curtsies==0.2.11          # via bpython
 first==2.0.1              # via pip-tools
 flake8==3.3.0
+flask-cors==3.0.3
 flask-migrate==2.1.1
 flask-restful==0.3.6
 flask-shell-bpython==0.0.1
@@ -42,7 +43,7 @@ python-editor==1.0.3      # via alembic
 python-levenshtein==0.12.0
 pytz==2017.2
 requests==2.18.4          # via bpython
-six==1.11.0               # via bpython, flask-restful, pip-tools, python-dateutil
+six==1.11.0               # via bpython, flask-cors, flask-restful, pip-tools, python-dateutil
 sqlalchemy==1.1.14
 urllib3==1.22             # via requests
 wcwidth==0.1.7            # via curtsies

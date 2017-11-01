@@ -11,5 +11,6 @@ psycopg2==2.7.3.1
 SQLAlchemy==1.1.14
 Flask-SQLAlchemy==2.3.0
 Flask-RESTful==0.3.6
+Flask-Cors==3.0.3
 Flask-Migrate==2.1.1
 flask-shell-bpython==0.0.1  # Use bpython and flask shell
