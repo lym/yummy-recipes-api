@@ -8,7 +8,10 @@ from flask.views import MethodView
 from fuzzywuzzy import process
 
 from models import User
-from .base_controller import BaseController
+from .base_controller import (
+    BaseController,
+    UsersEndpoint,
+)
 
 
 class UserSearchController(MethodView):
@@ -41,7 +44,10 @@ class UserSearchController(MethodView):
                 'email': matched_user.email,
                 'username': matched_user.username,
                 'created': matched_user.created,
-                'modified': matched_user.modified
+                'modified': matched_user.modified,
+                'links': {
+                    'self': UsersEndpoint + str(matched_user.id) + '/'
+                }
             }
             content.append(record)
         return jsonify(content)
