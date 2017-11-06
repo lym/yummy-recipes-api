@@ -10,7 +10,10 @@ from models import (
     User,
 )
 from models.base_model import db as DB
-from .base_controller import BaseController
+from .base_controller import (
+    BaseController,
+    RecipesEndpoint,
+)
 
 
 class RecipesController(MethodView):
@@ -63,7 +66,6 @@ class RecipesController(MethodView):
         res = {'status': 201}
         return jsonify(res)
 
-
     def get(self):
         if not BaseController.authorized(request):
             abort(401)
@@ -82,7 +84,10 @@ class RecipesController(MethodView):
                 'title': recipe.title,
                 'description': recipe.description,
                 'created': recipe.created,
-                'modified': recipe.modified
+                'modified': recipe.modified,
+                'links': {
+                    'self': RecipesEndpoint + str(recipe.id) + '/'
+                }
             }
             content.append(record)
         res = jsonify(content)
