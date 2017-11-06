@@ -1,51 +1,16 @@
 import requests
 
+from .helper import (
+    create_test_user,
+    prepare_auth_headers,
+)
+
 """ Note that to keep the test database in a clean state, we must always have
 a test the deletes all that was created at the end of the test suite as is the
 case currently.
 """
 
 user_list_url = 'http://127.0.0.1:5000/users/'
-
-
-def create_test_user():
-    """ Create a test user, via an API endpoint """
-    url = 'http://127.0.0.1:5000/users/'
-    user_credentials = {
-        "first_name": "Safin",
-        "last_name" : "Marat",
-        "email"     : "smarat@atptour.com",
-        "username"  : "smarat",
-        "password"  : "testpass"
-    }
-    req = requests.post(url, json=user_credentials)
-    return req
-
-
-def retrieve_auth_token():
-    """ It fetches a valid user authentication token, from the API server, to
-    be used in the subsequent requests for protected resources.
-    """
-    login_url     = 'http://127.0.0.1:5000/login/'
-    user_credentials = {
-        "email"     : "smarat@atptour.com",
-        "password"  : "testpass"
-    }
-    auth_token = requests.post(
-        login_url, json=user_credentials
-    ).json().get('token')
-    return auth_token
-
-
-def prepare_auth_headers():
-    """ Creates the authentication headers dictionary for use with requests for
-    protected resources.
-    """
-    auth_token = retrieve_auth_token()
-    auth_headers = {
-        'Authorization': 'Token {}'.format(auth_token)
-    }
-    return auth_headers
 
 
 def test_user_registration():
