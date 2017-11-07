@@ -50,6 +50,7 @@ def retrieve_test_user():
     user records like id, token, creation and modification dates that are only
     present after a user is created.
     """
+    create_test_user()
     user_list_url = 'http://127.0.0.1:5000/users/'
     auth_headers = prepare_auth_headers()
     users = requests.get(user_list_url, headers=auth_headers)
