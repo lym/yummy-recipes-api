@@ -88,9 +88,11 @@ class RecipesShowController(MethodView):
         """ Delete a recipe and all its instructions and ingredients """
         if not BaseController.authorized(request):
             abort(401, 'Please supply valid user credentials')
+        if len(recipe_id.strip()) == 0:  # Check for empty string
+            abort(400, 'Please supply a recipe id!')
         recipe_id = int(recipe_id)
         recipe = Recipe.query.filter_by(id=recipe_id).first()
-        if recipe_id is None:
+        if recipe is None:
             abort(404, 'Requested recipe does not exist on the server')
 
         # Ensure a user is deleting their own recipe record
