@@ -68,10 +68,10 @@ class RecipesController(MethodView):
 
     def get(self):
         if not BaseController.authorized(request):
-            abort(401)
+            abort(401, 'Please supply Authentication credentials')
         user_token = BaseController.get_auth_token(request)
         if user_token is None:
-            abort(401)
+            abort(401, 'Bad User token supplied!')
         user = User.query.filter_by(auth_token=user_token).first()
 
         """ Recipe retrieval """
