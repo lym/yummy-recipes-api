@@ -2,6 +2,7 @@ import requests
 
 from .helper import (
     create_test_user,
+    delete_test_user,
     prepare_auth_headers,
 )
 
@@ -78,3 +79,6 @@ def test_user_deletion():
     deletion_url = 'http://127.0.0.1:5000/users/{}/'.format(user_id)
     req = requests.delete(deletion_url, headers=auth_headers)
     assert req.status_code == 200  # FIXME: should be 204
+
+
+delete_test_user()
