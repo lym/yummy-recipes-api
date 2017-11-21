@@ -4,6 +4,8 @@ API to the yummy recipes service
 
 [![Build Status](https://travis-ci.org/lym/yummy-recipes-api.svg?branch=master)](https://travis-ci.org/lym/yummy-recipes-api)
 
+[![Coverage Status](https://coveralls.io/repos/github/lym/yummy-recipes-api/badge.svg?branch=master)](https://coveralls.io/github/lym/yummy-recipes-api?branch=master)
+
 ## Authentication
 After registration, a user should obtain an auth token for use with
 subsequent requests. The authentication token is passed in the header
