@@ -68,13 +68,13 @@ def test_recipe_list_pagination():
 
 def test_recipe_search():
     """ It should return recipes matching a given search criteria """
-    search_term = "fin"
+    search_term = "aked"
     url = 'http://127.0.0.1:5000/search/recipes?q={}'.format(search_term)
     auth_headers = prepare_auth_headers()
     req = requests.get(url, headers=auth_headers)
     assert req.status_code == 200
     recipes = req.json()
-    assert len(recipes) > 0  # Because we know a user matching this exists
+    assert len(recipes) > 0  # Because we know the recipe matching this exists
 
     search_term2 = "zqd"
     url2 = 'http://127.0.0.1:5000/search/recipes?q={}'.format(search_term2)
