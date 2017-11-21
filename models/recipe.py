@@ -24,3 +24,8 @@ class Recipe(TimestampMixin, DB.Model):
         return "<Recipe(user_id='{}', title='{}', description='{}')>".format(
                self.user_id, self.title, self.description
         )
+
+    def save(self):
+        """This method persists the recipe object in the database"""
+        DB.session.add(self)
+        DB.session.commit()
