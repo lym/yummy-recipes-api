@@ -6,6 +6,7 @@ from .recipes_controller import RecipesController
 from .recipes_show_controller import RecipesShowController
 from .instructions_controller import InstructionsController
 from .ingredients_controller import IngredientsController
+from .recipe_search_controller import RecipeSearchController
 
 
 __all__ = [
@@ -15,6 +16,7 @@ __all__ = [
     'LoginController',
     'RecipesController',
     'RecipesShowController',
+    'RecipeSearchController',
     'InstructionsController',
     'IngredientsController',
 ]

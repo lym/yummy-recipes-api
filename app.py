@@ -10,6 +10,7 @@ from controllers import (
     LoginController,
     RecipesController,
     RecipesShowController,
+    RecipeSearchController,
     InstructionsController,
     IngredientsController,
 )
@@ -49,3 +50,4 @@ api.add_resource(RecipesShowController, '/recipes/<int:recipe_id>/')
 api.add_resource(InstructionsController, '/instructions/')
 api.add_resource(IngredientsController, '/ingredients/')
 api.add_resource(UserSearchController, '/search/users')
+api.add_resource(RecipeSearchController, '/search/recipes')
