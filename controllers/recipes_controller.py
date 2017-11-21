@@ -10,7 +10,6 @@ from models import (
     Recipe,
     User,
 )
-from models.base_model import db as DB
 from .base_controller import (
     BaseController,
     RecipesEndpoint,
@@ -57,12 +56,20 @@ class RecipesController(MethodView):
                 description=description,
                 fulfilled=fulfilled
             )
-            DB.session.add(new_recipe)
-            DB.session.commit()
+            new_recipe.save()
         except IntegrityError:
-            print('Possibly duplicate recipe!')
             abort(400, 'Possibly duplicate recipe!')
-        return {'status': 201}
+        saved_recipe = Recipe.query.filter_by(title=title).first()
+        result = {
+            'id': saved_recipe.id,
+            'user_id': saved_recipe.user_id,
+            'title': saved_recipe.title,
+            'description': saved_recipe.description,
+            'fulfilled': saved_recipe.fulfilled,
+            'created': saved_recipe.created,
+            'modified': saved_recipe.modified,
+        }
+        return result
 
     def _process_raw_json_data(self, req_data):
         """ Handles processing of records incase the recipe data is being
@@ -91,22 +98,28 @@ class RecipesController(MethodView):
         if user_id != token_owner.id:
             abort(400, 'Recipe owner/Token owner mismatch')
 
-        # Check if recipe already exists
-        existant_recipe = Recipe.query.filter_by(title=title.lower()).first()
-        if ((existant_recipe is not None)and
-                (existant_recipe.title == title.lower)):
-            print('Recipe Already exists')
-            res = jsonify({'status': 400})
-            abort(res)
-        new_recipe = Recipe(
-            user_id=user_id,
-            title=title,
-            description=description,
-            fulfilled=fulfilled
-        )
-        DB.session.add(new_recipe)
-        DB.session.commit()
-        return {'status': 201}
+        try:
+            new_recipe = Recipe(
+                user_id=existant_user.id,
+                title=title,
+                description=description,
+                fulfilled=fulfilled
+            )
+            new_recipe.save()
+        except IntegrityError:
+            abort(400, 'Possibly duplicate recipe!')
+        # TODO: Set 201 in header and return created item, like github does it
+        saved_recipe = Recipe.query.filter_by(title=title).first()
+        result = {
+            'id': saved_recipe.id,
+            'user_id': saved_recipe.user_id,
+            'title': saved_recipe.title,
+            'description': saved_recipe.description,
+            'fulfilled': saved_recipe.fulfilled,
+            'created': saved_recipe.created,
+            'modified': saved_recipe.modified,
+        }
+        return result
 
     def post(self):
         if not BaseController.authorized(request):
@@ -117,7 +130,7 @@ class RecipesController(MethodView):
         elif request.form is not None:  # form-encoded string
             res = self._process_form_data(request.form)
 
-        return jsonify(res)
+        return jsonify(result=res, status=201)
 
     def get(self):
         if not BaseController.authorized(request):
@@ -143,5 +156,5 @@ class RecipesController(MethodView):
                 }
             }
             content.append(record)
-        res = jsonify(content)
+        res = jsonify(results=content, status=201)
         return res
