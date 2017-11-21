@@ -85,14 +85,14 @@ def test_recipe_search():
 
 
 def test_recipe_deletion():
-    """ It should delete a user and all their recipes, instructions and
+    """ It should delete a recipe and all its instructions and
     ingredients
     """
-    recipe_list_url = 'http://127.0.0.1:5000/users/'
+    recipe_list_url = 'http://127.0.0.1:5000/recipes/'
     auth_headers = prepare_auth_headers()
     recipes = requests.get(recipe_list_url, headers=auth_headers)
 
-    recipe_id = recipes.json()[-1].get('id')  # Last User's ID
+    recipe_id = recipes.json()[-1].get('id')  # Last Recipe's ID
     deletion_url = 'http://127.0.0.1:5000/recipes/{}/'.format(recipe_id)
     req = requests.delete(deletion_url, headers=auth_headers)
     assert req.status_code == 200  # FIXME: should be 204
