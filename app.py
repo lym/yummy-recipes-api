@@ -16,7 +16,7 @@ from controllers import (
 )
 
 app = Flask('yummy_recipes_api')
-app.config.from_object('settings.TestEnv')
+app.config.from_object('settings.DevEnv')
 db.app = app
 db.init_app(app)
 db.create_all()
