@@ -15,25 +15,8 @@ from controllers import (
     IngredientsController,
 )
 
-""" Database Configuration """
-
-DBHost       = 'localhost'
-DBPort       = '5432'
-DBName       = 'yummy_recipes'
-DBUser       = 'yummy_recipes'
-DBPass       = 'weakpass'
-
-DATABASE_URL = "postgres://{}:{}@{}:{}/{}".format(
-    DBUser,
-    DBPass,
-    DBHost,
-    DBPort,
-    DBName
-)
-
 app = Flask('yummy_recipes_api')
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object('settings.TestEnv')
 db.app = app
 db.init_app(app)
 db.create_all()
