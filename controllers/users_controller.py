@@ -4,7 +4,7 @@ from flask import (
     request,
     jsonify,
 )
-from flask.views import MethodView
+from flask_restful import Resource
 
 from models import User
 from models.base_model import db as DB
@@ -14,7 +14,7 @@ from .base_controller import (
 )
 
 
-class UsersController(MethodView):
+class UsersController(Resource):
     """ Controller for the user resource """
 
     def _make_token(self, email):
@@ -55,8 +55,7 @@ class UsersController(MethodView):
 
         DB.session.add(new_user)
         DB.session.commit()
-        res = {'status': 201}
-        return jsonify(res)
+        return {'message': "User created"}, 201
 
     def get(self):
         if not BaseController.authorized(request):
