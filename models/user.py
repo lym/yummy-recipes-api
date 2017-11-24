@@ -15,6 +15,13 @@ class User(TimestampMixin, DB.Model):
 
     recipes = DB.relationship('Recipe', backref='user', lazy=True)
 
+    def save(self):
+        """ Takes care of creating a new user or updating a user instance
+        TODO: Take care of update scenario
+        """
+        DB.session.add(self)
+        DB.session.commit()
+
     def __repr__(self):
         return "<User(fullname='{}', email='{}', password='{}')>".format(
                                 (self.first_name.capitalize() + ' ' + self.last_name.capitalize()),  # NOQA
