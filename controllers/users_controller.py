@@ -7,7 +7,6 @@ from flask import (
 from flask_restful import Resource
 
 from models import User
-from models.base_model import db as DB
 from .base_controller import (
     BaseController,
     UsersEndpoint,
@@ -53,8 +52,7 @@ class UsersController(Resource):
             last_name=last_name, username=username, auth_token=token
         )
 
-        DB.session.add(new_user)
-        DB.session.commit()
+        new_user.save()
         return {'message': "User created"}, 201
 
     def get(self):
