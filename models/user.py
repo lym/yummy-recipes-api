@@ -8,7 +8,7 @@ class User(TimestampMixin, DB.Model):
     id          = DB.Column(DB.Integer, primary_key=True)
     first_name  = DB.Column(DB.String)
     last_name   = DB.Column(DB.String)
-    username    = DB.Column(DB.String)
+    username    = DB.Column(DB.String, unique=True)
     email       = DB.Column(DB.String, unique=True)
     password    = DB.Column(DB.String)
     auth_token  = DB.Column(DB.String, nullable=False, unique=True)
