@@ -38,9 +38,9 @@ class UsersController(Resource):
         password = request.get_json().get('password')
         token = self._make_token(email)
         # Check for required fields
-        if (len(email.split()) == 0 or
+        if (password is None or len(email.split()) == 0 or
                 len(password.split()) == 0):
-            return jsonify({'status': 400})
+            return {'message': 'Please enter password'}, 400
 
         # Check if user already exists
         existant_user = User.query.filter_by(email=email).first()
