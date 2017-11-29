@@ -3,7 +3,7 @@ from flask import (
     request,
     jsonify,
 )
-from flask.views import MethodView
+from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
 from models import (
@@ -16,11 +16,15 @@ from .base_controller import (
 )
 
 
-class RecipesController(MethodView):
+class RecipesController(Resource):
     """ Controller for the recipe resource
     Any User can create a resource but a User can only GET/DELETE/PUT/PATCH
     a recipe that they own
     """
+    def _get_user_id_from_token(self, token):
+        user = User.query.filter_by(auth_token=token).first()
+        return user.id
+
     def _process_form_data(self, req_data):
         """ Handles processing of records incase the recipe data is being
         submitted via a form-encoded data structure.
@@ -73,16 +77,17 @@ class RecipesController(MethodView):
 
     def _process_raw_json_data(self, req_data):
         """ Handles processing of records incase the recipe data is being
-        submitted and a raw JSON string
+        submitted as a raw JSON string
         @req_data: The request payload object
         """
-        user_id = int(req_data.get('user_id'))
-        title   = req_data.get('title')
+        user_token  = request.headers.get('Authorization').split(sep=' ')[-1]
+        user_id     = self._get_user_id_from_token(user_token)
+        title       = req_data.get('title')
         description = req_data.get('description')
         fulfilled   = req_data.get('fulfilled')
 
         # Check for required fields
-        if user_id is None:
+        if title is None or len(title) == 0:  # Nonexistant or empty
             abort(400, 'Please attach a user to this recipe')
 
         # Check if recipe owner exists
@@ -116,7 +121,7 @@ class RecipesController(MethodView):
             'title': saved_recipe.title,
             'description': saved_recipe.description,
             'fulfilled': saved_recipe.fulfilled,
-            'created': saved_recipe.created,
+            'created': saved_recipe.created.strftime('%Y-%m-%d %H:%M:%S'),
             'modified': saved_recipe.modified,
         }
         return result
@@ -130,7 +135,7 @@ class RecipesController(MethodView):
         elif request.form is not None:  # form-encoded string
             res = self._process_form_data(request.form)
 
-        return jsonify(result=res, status=201)
+        return res, 201
 
     def get(self):
         if not BaseController.authorized(request):
