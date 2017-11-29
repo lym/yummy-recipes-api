@@ -3,7 +3,7 @@ from flask import (
     request,
     jsonify,
 )
-from flask.views import MethodView
+from flask_restful import Resource
 
 from models import Recipe
 from models.base_model import db as DB
@@ -13,7 +13,7 @@ from .base_controller import (
 )
 
 
-class RecipesShowController(MethodView):
+class RecipesShowController(Resource):
     """ Handles requests for a single recipe entity """
     def get(self, recipe_id):
         if not BaseController.authorized(request):
@@ -74,15 +74,14 @@ class RecipesShowController(MethodView):
             'fulfilled': recipe.fulfilled,
             'user_id': recipe.user.id,
             'user': recipe.user.username,
-            'created': recipe.created,
-            'modified': recipe.modified,
+            'created': recipe.created.strftime('%Y-%m-%d %H:%M:%S'),
+            'modified': recipe.modified.strftime('%Y-%m-%d %H:%M:%S'),
             'links': {
                 'self': RecipesEndpoint + str(recipe_id) + '/'
 
             }
         }
-        res = jsonify(record)
-        return res
+        return record, 200
 
     def delete(self, recipe_id):
         """ Delete a recipe and all its instructions and ingredients """
@@ -108,5 +107,4 @@ class RecipesShowController(MethodView):
                 DB.session.commit()
         DB.session.delete(recipe)
         DB.session.commit()
-        res = {'status': 204}
-        return jsonify(res)
+        return {'message': 'User deleted'}, 204
