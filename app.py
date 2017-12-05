@@ -8,6 +8,7 @@ from controllers import (
     UsersShowController,
     UserSearchController,
     UserRecipesController,
+    UserRecipeController,
     LoginController,
     RecipesController,
     RecipesShowController,
@@ -29,6 +30,9 @@ CORS(app)  # Enable CORS on all our endpoints
 api.add_resource(UsersController, '/users/')
 api.add_resource(UsersShowController, '/users/<int:user_id>/')
 api.add_resource(UserRecipesController, '/users/<int:user_id>/recipes/')
+api.add_resource(
+    UserRecipeController, '/users/<int:user_id>/recipes/<int:recipe_id>/'
+)
 api.add_resource(LoginController, '/login/')
 api.add_resource(RecipesController, '/recipes/')
 api.add_resource(RecipesShowController, '/recipes/<int:recipe_id>/')

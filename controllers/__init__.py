@@ -3,6 +3,7 @@ from .users_controller import UsersController
 from .users_show_controller import UsersShowController
 from .user_search_controller import UserSearchController
 from .user_recipes_controller import UserRecipesController
+from .user_recipe_controller import UserRecipeController
 from .recipes_controller import RecipesController
 from .recipes_show_controller import RecipesShowController
 from .instructions_controller import InstructionsController
@@ -15,6 +16,7 @@ __all__ = [
     'UsersShowController',
     'UserSearchController',
     'UserRecipesController',
+    'UserRecipeController',
     'LoginController',
     'RecipesController',
     'RecipesShowController',
