@@ -19,6 +19,19 @@ def create_test_user():
     return req
 
 
+def create_passwordless_user():
+    """ Create a test password-less user, via an API endpoint """
+    url = 'http://127.0.0.1:5000/users/'
+    user_credentials = {
+        "first_name": "Safin",
+        "last_name" : "Marat",
+        "email"     : "smarat@atptour.com",
+        "username"  : "smarat"
+    }
+    req = requests.post(url, json=user_credentials)
+    return req
+
+
 def retrieve_auth_token():
     """ It fetches a valid user authentication token, from the API server, to
     be used in the subsequent requests for protected resources.
@@ -62,10 +75,12 @@ def delete_test_user():
     """ Delete the user created during the test run to ensure our database is
     left in a pristine state.
     """
-    user_list_url = 'http://127.0.0.1:5000/users/'
-    auth_headers = prepare_auth_headers()
-    users = requests.get(user_list_url, headers=auth_headers)
-
-    user_id = users.json()[-1].get('id')  # Last User's ID
-    deletion_url = 'http://127.0.0.1:5000/users/{}/'.format(user_id)
-    requests.delete(deletion_url, headers=auth_headers)
+    user_list_url   = 'http://127.0.0.1:5000/users/'
+    auth_headers    = prepare_auth_headers()
+    users           = requests.get(user_list_url, headers=auth_headers)
+    if users.json().__len__() == 0 or users.status_code == 401:
+        return 0
+    else:
+        user_id = users.json()[-1].get('id')  # Last User's ID
+        deletion_url = 'http://127.0.0.1:5000/users/{}/'.format(user_id)
+        requests.delete(deletion_url, headers=auth_headers)
