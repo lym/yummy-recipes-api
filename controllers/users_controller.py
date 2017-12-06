@@ -53,7 +53,19 @@ class UsersController(Resource):
         )
 
         new_user.save()
-        return {'message': "User created"}, 201
+        created_user = User.query.filter_by(email=email).first()
+        record = {
+            'id': created_user.id,
+            'first_name': created_user.first_name,
+            'last_name': created_user.last_name,
+            'email': created_user.email,
+            'username': created_user.username,
+            'created': created_user.created.strftime('%Y-%m-%d %H:%M:%S'),
+            'links': {
+                'self': self._make_self_link(created_user)
+            }
+        }
+        return record, 201
 
     def get(self):
         if not BaseController.authorized(request):
