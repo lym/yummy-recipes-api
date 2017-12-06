@@ -34,7 +34,7 @@ def create_test_recipe():
 def test_recipe_creation():
     """ It should create a new recipe """
     req = create_test_recipe()
-    assert req.status_code == 200  # FIXME: This should be a 201
+    assert req.status_code == 201
 
 
 def test_recipe_attributes():
