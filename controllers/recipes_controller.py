@@ -143,10 +143,30 @@ class RecipesController(Resource):
         user_token = BaseController.get_auth_token(request)
         if user_token is None:
             abort(401, 'Bad User token supplied!')
-        user = User.query.filter_by(auth_token=user_token).first()
 
-        """ Recipe retrieval """
-        recipes = Recipe.query.filter_by(user_id=user.id)
+        result_count = request.args.get('limit')
+        user         = User.query.filter_by(auth_token=user_token).first()
+        if result_count is None:
+            recipes = Recipe.query.filter_by(user_id=user.id)
+            content = []
+            for recipe in recipes:
+                record = {
+                    'id'        : recipe.id,
+                    'user_id'   : recipe.user.id,
+                    'title'     : recipe.title,
+                    'description': recipe.description,
+                    'created'   : recipe.created,
+                    'modified'  : recipe.modified,
+                    'links'     : {
+                        'self': RecipesEndpoint + str(recipe.id) + '/'
+                    }
+                }
+                content.append(record)
+            res = jsonify(results=content, status=200)
+            return res
+        recipes = Recipe.query.filter_by(
+            user_id=user.id
+        ).limit(int(result_count)).all()
         content = []
         for recipe in recipes:
             record = {
@@ -161,5 +181,5 @@ class RecipesController(Resource):
                 }
             }
             content.append(record)
-        res = jsonify(results=content, status=201)
+        res = jsonify(results=content, status=200)
         return res
