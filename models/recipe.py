@@ -13,12 +13,15 @@ class Recipe(TimestampMixin, DB.Model):
     user_id     = DB.Column(
         DB.Integer, DB.ForeignKey('users.id'), nullable=False
     )
-    title       = DB.Column(DB.String, unique=True)
+    title       = DB.Column(DB.String)
     description = DB.Column(DB.String)
     fulfilled   = DB.Column(DB.Boolean)
 
     instructions = DB.relationship('Instruction', backref='recipe', lazy=True)
     ingredients = DB.relationship('Ingredient', backref='recipe', lazy=True)
+    __table_args__ = (
+        DB.UniqueConstraint('user_id', 'title', name='_user_title_uc'),
+    )
 
     def __repr__(self):
         return "<Recipe(user_id='{}', title='{}', description='{}')>".format(
