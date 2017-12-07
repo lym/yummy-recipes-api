@@ -13,7 +13,7 @@ class Recipe(TimestampMixin, DB.Model):
     user_id     = DB.Column(
         DB.Integer, DB.ForeignKey('users.id'), nullable=False
     )
-    title       = DB.Column(DB.String)
+    title       = DB.Column(DB.String, unique=True)
     description = DB.Column(DB.String)
     fulfilled   = DB.Column(DB.Boolean)
 
@@ -24,3 +24,8 @@ class Recipe(TimestampMixin, DB.Model):
         return "<Recipe(user_id='{}', title='{}', description='{}')>".format(
                self.user_id, self.title, self.description
         )
+
+    def save(self):
+        """This method persists the recipe object in the database"""
+        DB.session.add(self)
+        DB.session.commit()

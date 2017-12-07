@@ -4,17 +4,16 @@ from flask import (
     request,
     jsonify,
 )
-from flask.views import MethodView
+from flask_restful import Resource
 
 from models import User
-from models.base_model import db as DB
 from .base_controller import (
     BaseController,
     UsersEndpoint,
 )
 
 
-class UsersController(MethodView):
+class UsersController(Resource):
     """ Controller for the user resource """
 
     def _make_token(self, email):
@@ -39,9 +38,9 @@ class UsersController(MethodView):
         password = request.get_json().get('password')
         token = self._make_token(email)
         # Check for required fields
-        if (len(email.split()) == 0 or
+        if (password is None or len(email.split()) == 0 or
                 len(password.split()) == 0):
-            return jsonify({'status': 400})
+            return {'message': 'Please enter password'}, 400
 
         # Check if user already exists
         existant_user = User.query.filter_by(email=email).first()
@@ -53,10 +52,20 @@ class UsersController(MethodView):
             last_name=last_name, username=username, auth_token=token
         )
 
-        DB.session.add(new_user)
-        DB.session.commit()
-        res = {'status': 201}
-        return jsonify(res)
+        new_user.save()
+        created_user = User.query.filter_by(email=email).first()
+        record = {
+            'id': created_user.id,
+            'first_name': created_user.first_name,
+            'last_name': created_user.last_name,
+            'email': created_user.email,
+            'username': created_user.username,
+            'created': created_user.created.strftime('%Y-%m-%d %H:%M:%S'),
+            'links': {
+                'self': self._make_self_link(created_user)
+            }
+        }
+        return record, 201
 
     def get(self):
         if not BaseController.authorized(request):

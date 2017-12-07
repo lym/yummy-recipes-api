@@ -8,12 +8,19 @@ class User(TimestampMixin, DB.Model):
     id          = DB.Column(DB.Integer, primary_key=True)
     first_name  = DB.Column(DB.String)
     last_name   = DB.Column(DB.String)
-    username    = DB.Column(DB.String)
-    email       = DB.Column(DB.String, unique=True)
-    password    = DB.Column(DB.String)
+    username    = DB.Column(DB.String, unique=True, nullable=False)
+    email       = DB.Column(DB.String, nullable=False, unique=True)
+    password    = DB.Column(DB.String, nullable=False)
     auth_token  = DB.Column(DB.String, nullable=False, unique=True)
 
     recipes = DB.relationship('Recipe', backref='user', lazy=True)
+
+    def save(self):
+        """ Takes care of creating a new user or updating a user instance
+        TODO: Take care of update scenario
+        """
+        DB.session.add(self)
+        DB.session.commit()
 
     def __repr__(self):
         return "<User(fullname='{}', email='{}', password='{}')>".format(

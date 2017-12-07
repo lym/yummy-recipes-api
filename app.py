@@ -7,32 +7,18 @@ from controllers import (
     UsersController,
     UsersShowController,
     UserSearchController,
+    UserRecipesController,
+    UserRecipeController,
     LoginController,
     RecipesController,
     RecipesShowController,
+    RecipeSearchController,
     InstructionsController,
     IngredientsController,
 )
 
-""" Database Configuration """
-
-DBHost       = 'localhost'
-DBPort       = '5432'
-DBName       = 'yummy_recipes'
-DBUser       = 'yummy_recipes'
-DBPass       = 'weakpass'
-
-DATABASE_URL = "postgres://{}:{}@{}:{}/{}".format(
-    DBUser,
-    DBPass,
-    DBHost,
-    DBPort,
-    DBName
-)
-
 app = Flask('yummy_recipes_api')
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object('settings.DevEnv')
 db.app = app
 db.init_app(app)
 db.create_all()
@@ -43,9 +29,14 @@ CORS(app)  # Enable CORS on all our endpoints
 
 api.add_resource(UsersController, '/users/')
 api.add_resource(UsersShowController, '/users/<int:user_id>/')
+api.add_resource(UserRecipesController, '/users/<int:user_id>/recipes/')
+api.add_resource(
+    UserRecipeController, '/users/<int:user_id>/recipes/<int:recipe_id>/'
+)
 api.add_resource(LoginController, '/login/')
 api.add_resource(RecipesController, '/recipes/')
 api.add_resource(RecipesShowController, '/recipes/<int:recipe_id>/')
 api.add_resource(InstructionsController, '/instructions/')
 api.add_resource(IngredientsController, '/ingredients/')
 api.add_resource(UserSearchController, '/search/users')
+api.add_resource(RecipeSearchController, '/search/recipes')
