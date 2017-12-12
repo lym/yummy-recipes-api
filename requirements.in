@@ -14,3 +14,4 @@ Flask-RESTful==0.3.6
 Flask-Cors==3.0.3
 Flask-Migrate==2.1.1
 flask-shell-bpython==0.0.1  # Use bpython and flask shell
+Flask-Testing==0.6.2
