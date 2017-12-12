@@ -1,11 +1,12 @@
-import unittest
-import requests
+import json
+from flask_testing import TestCase
+
+from app import app
 
 from .helper import (
     create_test_user,
     delete_test_user,
     prepare_auth_headers,
-    retrieve_test_user,
 )
 
 """ Note that to keep the test database in a clean state, we must always have
@@ -16,7 +17,11 @@ case currently with delete_test_user().
 recipe_list_url = 'http://127.0.0.1:5000/recipes/'
 
 
-class TestRecipesController(unittest.TestCase):
+class TestRecipesController(TestCase):
+    def create_app(self, app=app):
+        app.config.from_object('settings.TestEnv')
+        return app
+
     def setUp(self):
         create_test_user()
 
@@ -27,11 +32,13 @@ class TestRecipesController(unittest.TestCase):
         """ Create a test recipe, via an API endpoint """
         recipe_data = {
             "title"     : "Tender Italian Baked chicken",
-            "description": "This baked chicken recipe is ready in just 10 minutes",
+            "description": "This baked chicken recipe is ready in just 10 minutes",  # NOQA
             "fulfilled" : False
         }
-        req = requests.post(
-            recipe_list_url, json=recipe_data, headers=prepare_auth_headers()
+        req = self.client.post(
+            recipe_list_url, data=json.dumps(recipe_data),
+            content_type='application/json',
+            headers=prepare_auth_headers()
         )
         return req
 
@@ -45,26 +52,37 @@ class TestRecipesController(unittest.TestCase):
             "description": "Instant wild rice is cooked in chicken broth",
             "fulfilled" : False
         }
-        requests.post(
-            recipe_list_url, json=recipe_data, headers=prepare_auth_headers()
+        self.client.post(
+            recipe_list_url, data=json.dumps(recipe_data),
+            content_type='application/json',
+            headers=prepare_auth_headers()
         )
-        req = requests.get(recipe_list_url, headers=prepare_auth_headers())
+        req = self.client.get(
+            recipe_list_url,
+            content_type='application/json',
+            headers=prepare_auth_headers()
+        )
         return req
 
     def delete_test_recipe(self):
         recipe_list_url = 'http://127.0.0.1:5000/recipes/'
         auth_headers    = prepare_auth_headers()
-        recipes         = requests.get(recipe_list_url, headers=auth_headers)
-        recipe_id       = recipes.json()[-1].get('id')  # Last Recipe's ID
+        recipes         = self.client.get(
+            recipe_list_url,
+            content_type='application/json',
+            headers=auth_headers
+        )
+        recipe_id       = recipes.json[-1].get('id')  # Last Recipe's ID
         deletion_url    = 'http://127.0.0.1:5000/recipes/{}/'.format(recipe_id)
-        requests.delete(deletion_url, headers=auth_headers)
-
+        self.client.delete(
+            deletion_url,
+            headers=prepare_auth_headers()
+        )
 
     def test_recipe_creation(self):
         """ It should create a new recipe """
         req = self.create_test_recipe()
         assert req.status_code == 201
-
 
     def test_recipe_attributes(self):
         """ Check that expected user attributes are returned """
@@ -78,12 +96,13 @@ class TestRecipesController(unittest.TestCase):
             "modified",
             "links",
         )
-        fetched_recipes = requests.get(
-            recipe_list_url, headers=prepare_auth_headers()
-        ).json()
+        fetched_recipes = self.client.get(
+            recipe_list_url,
+            content_type='application/json',
+            headers=prepare_auth_headers()
+        ).json
         for attr in recipe_attributes:
             assert attr in fetched_recipes.get('results')[0].keys()
-
 
     def test_recipe_list_pagination(self):
         """ It should return paginated list of recipes """
@@ -91,11 +110,12 @@ class TestRecipesController(unittest.TestCase):
         limit        = 2
         url          = 'http://127.0.0.1:5000/recipes/?limit={}'.format(limit)
         auth_headers = prepare_auth_headers()
-        req          = requests.get(url, headers=auth_headers)
+        req          = self.client.get(
+            url, content_type='application/json', headers=auth_headers
+        )
 
         assert req.status_code == 200
-        assert req.json().get('results').__len__() == limit
-
+        assert req.json.get('results').__len__() == limit
 
     def test_recipe_search(self):
         """ It should return recipes matching a given search criteria """
@@ -105,20 +125,23 @@ class TestRecipesController(unittest.TestCase):
             search_term
         )
         auth_headers = prepare_auth_headers()
-        req = requests.get(url, headers=auth_headers)
+        req = self.client.get(
+            url, content_type='application/json', headers=auth_headers
+        )
         assert req.status_code == 200
-        recipes = req.json()
-        assert len(recipes) > 0  # Because we know the recipe matching this exists
+        recipes = req.json
+        assert len(recipes) > 0  # Because we know the recipe matching this exists  # NOQA
 
         search_term2 = "zqd"
         url2         = 'http://127.0.0.1:5000/search/recipes?q={}'.format(
             search_term2
         )
-        req          = requests.get(url2, headers=auth_headers)
+        req          = self.client.get(
+            url2, content_type='application/json', headers=auth_headers
+        )
         assert req.status_code == 200
-        users2 = req.json()
+        users2 = req.json
         assert len(users2) == 0  # Because we know a user matching this exists
-
 
     def test_recipe_deletion(self):
         """ It should delete a recipe and all its instructions and
@@ -127,8 +150,13 @@ class TestRecipesController(unittest.TestCase):
         self.create_test_recipe()
         recipe_list_url = 'http://127.0.0.1:5000/recipes/'
         auth_headers    = prepare_auth_headers()
-        recipes         = requests.get(recipe_list_url, headers=auth_headers)
-        recipe_id       = recipes.json().get('results')[-1].get('id')  # Last Recipe's ID NOQA
+        recipes         = self.client.get(
+            recipe_list_url, content_type='application/json',
+            headers=auth_headers
+        )
+        recipe_id       = recipes.json.get('results')[-1].get('id')  # Last Recipe's ID  # NOQA
         deletion_url    = 'http://127.0.0.1:5000/recipes/{}/'.format(recipe_id)
-        req             = requests.delete(deletion_url, headers=auth_headers)
+        req             = self.client.delete(
+            deletion_url, headers=auth_headers
+        )
         assert req.status_code == 204  # FIXME: should be 204
