@@ -1,4 +1,5 @@
 [run]
 omit =
     */.env/*
+    */test/*
     # omit everything in /usr
