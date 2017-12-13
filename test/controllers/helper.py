@@ -58,6 +58,14 @@ def prepare_auth_headers():
     return auth_headers
 
 
+def prepare_fake_auth_headers():
+    auth_token = '8e67b892' * 5
+    auth_headers = {
+        'Authorization': 'Token {}'.format(auth_token)
+    }
+    return auth_headers
+
+
 def retrieve_test_user():
     """ Fetches a user from the endpoint. This enables us to have access to
     user records like id, token, creation and modification dates that are only
