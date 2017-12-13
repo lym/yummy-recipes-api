@@ -92,10 +92,8 @@ class RecipesController(Resource):
 
         # Check if recipe owner exists
         existant_user = User.query.filter_by(id=user_id).first()
-        if existant_user is None:
-            print('Recipe owner does not exist!')
-            res = jsonify({'status': 400})
-            abort(res)
+        if existant_user is None:  # Attempt by non-authorized user
+            abort(401, 'You are not Authorized to access this resource')
 
         # Check if recipe owner is originator of request
         req_token = BaseController.get_auth_token(request)
@@ -128,7 +126,7 @@ class RecipesController(Resource):
 
     def post(self):
         if not BaseController.authorized(request):
-            abort(401)
+            abort(401, 'You are not Authorized to access this resource')
 
         if request.get_json() is not None:  # Raw JSON string payload
             res = self._process_raw_json_data(request.get_json())
@@ -139,7 +137,7 @@ class RecipesController(Resource):
 
     def get(self):
         if not BaseController.authorized(request):
-            abort(401, 'Please supply Authentication credentials')
+            abort(401, 'You are not Authorized to access this resource')
         user_token = BaseController.get_auth_token(request)
         if user_token is None:
             abort(401, 'Bad User token supplied!')
