@@ -7,6 +7,7 @@ from .helper import (
     create_test_user,
     delete_test_user,
     prepare_auth_headers,
+    prepare_fake_auth_headers,
 )
 
 """ Note that to keep the test database in a clean state, we must always have
@@ -79,10 +80,66 @@ class TestRecipesController(TestCase):
             headers=prepare_auth_headers()
         )
 
-    def test_recipe_creation(self):
+    def test_valid_recipe_creation(self):
         """ It should create a new recipe """
         req = self.create_test_recipe()
         assert req.status_code == 201
+
+    def test_create_recipe_without_title(self):
+        """ An attempt to create a recipe without a title attribute should be
+        blocked.
+        """
+        recipe_data = {
+            "description": "This recipe has no title",  # NOQA
+            "fulfilled" : False
+        }
+        req = self.client.post(
+            recipe_list_url, data=json.dumps(recipe_data),
+            content_type='application/json',
+            headers=prepare_auth_headers()
+        )
+        self.assertEqual(req.status_code, 400)
+        self.assertEqual(
+            req.json.get('message'),
+            'Please attach a user to this recipe'
+        )
+
+    def test_create_recipe_by_unauthorized_user(self):
+        """ An attempt by an unauthorized user to create a recipe should be
+        blocked.
+        """
+        recipe_data = {
+            "title": "This a recipe by an invalid user",
+            "description": "This recipe has no title",  # NOQA
+            "fulfilled" : True
+        }
+        req = self.client.post(
+            recipe_list_url, data=json.dumps(recipe_data),
+            content_type='application/json',
+            headers=prepare_fake_auth_headers()
+        )
+        self.assertEqual(req.status_code, 401)
+        self.assertEqual(
+            req.json.get('message'),
+            'You are not Authorized to access this resource'
+        )
+
+    def test_fetch_recipe_by_unauthorized_user(self):
+        """ An attempt by an unauthorized user to fetch a recipe should be
+        blocked.
+        """
+        self.create_test_recipe()
+        recipe_list_url = 'http://127.0.0.1:5000/recipes/'
+        auth_headers    = prepare_fake_auth_headers()
+        req         = self.client.get(
+            recipe_list_url, content_type='application/json',
+            headers=auth_headers
+        )
+        self.assertEqual(req.status_code, 401)
+        self.assertEqual(
+            req.json.get('message'),
+            'You are not Authorized to access this resource'
+        )
 
     def test_recipe_attributes(self):
         """ Check that expected user attributes are returned """
