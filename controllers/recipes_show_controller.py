@@ -107,4 +107,4 @@ class RecipesShowController(Resource):
                 DB.session.commit()
         DB.session.delete(recipe)
         DB.session.commit()
-        return {'message': 'User deleted'}, 204
+        return {'message': 'Recipe deleted'}, 200
