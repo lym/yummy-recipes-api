@@ -216,4 +216,5 @@ class TestRecipesController(TestCase):
         req             = self.client.delete(
             deletion_url, headers=auth_headers
         )
-        assert req.status_code == 204  # FIXME: should be 204
+        assert req.status_code == 200  # FIXME: should be 204
+        self.assertEqual('Recipe deleted', req.json.get('message'))
