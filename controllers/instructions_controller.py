@@ -3,7 +3,8 @@ from flask import (
     request,
     jsonify,
 )
-from flask.views import MethodView
+
+from flask_restful import Resource
 
 from models import (
     Instruction,
@@ -13,7 +14,7 @@ from models.base_model import db as DB
 from .base_controller import BaseController
 
 
-class InstructionsController(MethodView):
+class InstructionsController(Resource):
     """ Controller for the instructions resource
     A User may only add instructions to recipes that they own.
     """
