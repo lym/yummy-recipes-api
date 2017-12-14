@@ -1,4 +1,5 @@
 import hashlib
+import re
 from flask import (
     abort,
     request,
@@ -27,20 +28,45 @@ class UsersController(Resource):
         link = UsersEndpoint + str(user.id) + '/'
         return link
 
+    def _valid_email(self, email):
+        """ Checks whether supplied email has valid email address format """
+        if len(email.split()) == 0:  # If passed empty string
+            return False
+        if re.match(r"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$",
+                    email, re.I):
+            return True
+        return False
+
+    def _valid_username(self, username):
+        if (not isinstance(username, str)) or (not username.strip()):
+            return False
+        return True
+
+    def _valid_password(self, password):
+        if (password is None) or (not password.strip()):
+            return False
+        return True
+
     def post(self):
         """ User registration """
         if request.get_json() is None:
             abort(400, 'Please supply user credentials as JSON')
-        first_name = request.get_json().get('first_name')
+        first_name = request.get_json().get('first_name', "")
         last_name = request.get_json().get('last_name')
         username = request.get_json().get('username')
         email   = request.get_json().get('email')
         password = request.get_json().get('password')
         token = self._make_token(email)
+
         # Check for required fields
-        if (password is None or len(email.split()) == 0 or
-                len(password.split()) == 0):
-            return {'message': 'Please enter password'}, 400
+        if not self._valid_password(password):
+            return {'message': 'Please enter a valid password'}, 400
+
+        if not self._valid_email(email):
+            return {'message': 'Please valid email address'}, 400
+
+        if not self._valid_username(username):
+            return {'message': 'Please supply valid username'}, 400
 
         # Check if user already exists
         existant_user = User.query.filter_by(email=email).first()
