@@ -45,7 +45,7 @@ class RecipesController(Resource):
         existant_user = User.query.filter_by(auth_token=user_id).first()
         if existant_user is None:
             res = jsonify({'status': 400})
-            abort(res)
+            abort(res, 'Unauthorized Token')
 
         # Check if recipe owner is originator of request
         # Compare token in header to token submitted with data
