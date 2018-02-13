@@ -45,7 +45,7 @@ class RecipesController(Resource):
         existant_user = User.query.filter_by(auth_token=user_id).first()
         if existant_user is None:
             res = jsonify({'status': 400})
-            abort(res)
+            abort(res, 'Unauthorized Token')
 
         # Check if recipe owner is originator of request
         # Compare token in header to token submitted with data
@@ -70,7 +70,7 @@ class RecipesController(Resource):
             'title': saved_recipe.title,
             'description': saved_recipe.description,
             'fulfilled': saved_recipe.fulfilled,
-            'created': saved_recipe.created,
+            'created': saved_recipe.created.strftime('%Y-%m-%d %H:%M:%S'),
             'modified': saved_recipe.modified,
         }
         return result
@@ -92,10 +92,8 @@ class RecipesController(Resource):
 
         # Check if recipe owner exists
         existant_user = User.query.filter_by(id=user_id).first()
-        if existant_user is None:
-            print('Recipe owner does not exist!')
-            res = jsonify({'status': 400})
-            abort(res)
+        if existant_user is None:  # Attempt by non-authorized user
+            abort(401, 'You are not Authorized to access this resource')
 
         # Check if recipe owner is originator of request
         req_token = BaseController.get_auth_token(request)
@@ -128,7 +126,7 @@ class RecipesController(Resource):
 
     def post(self):
         if not BaseController.authorized(request):
-            abort(401)
+            abort(401, 'You are not Authorized to access this resource')
 
         if request.get_json() is not None:  # Raw JSON string payload
             res = self._process_raw_json_data(request.get_json())
@@ -139,7 +137,7 @@ class RecipesController(Resource):
 
     def get(self):
         if not BaseController.authorized(request):
-            abort(401, 'Please supply Authentication credentials')
+            abort(401, 'You are not Authorized to access this resource')
         user_token = BaseController.get_auth_token(request)
         if user_token is None:
             abort(401, 'Bad User token supplied!')
@@ -155,7 +153,7 @@ class RecipesController(Resource):
                     'user_id'   : recipe.user.id,
                     'title'     : recipe.title,
                     'description': recipe.description,
-                    'created'   : recipe.created,
+                    'created'   : recipe.created.strftime('%Y-%m-%d %H:%M:%S'),
                     'modified'  : recipe.modified,
                     'links'     : {
                         'self': RecipesEndpoint + str(recipe.id) + '/'
@@ -174,7 +172,7 @@ class RecipesController(Resource):
                 'user_id': recipe.user.id,
                 'title': recipe.title,
                 'description': recipe.description,
-                'created': recipe.created,
+                'created': recipe.created.strftime('%Y-%m-%d %H:%M:%S'),
                 'modified': recipe.modified,
                 'links': {
                     'self': RecipesEndpoint + str(recipe.id) + '/'

@@ -16,6 +16,7 @@ class TestEnv(object):
 
     SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    TESTING = True
 
 
 class DevEnv(object):

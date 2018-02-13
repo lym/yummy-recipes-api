@@ -3,14 +3,15 @@ from flask import (
     request,
     jsonify,
 )
-from flask.views import MethodView
+
+from flask_restful import Resource
 
 from models import User
 from models.base_model import db as DB
 from .base_controller import BaseController
 
 
-class UsersShowController(MethodView):
+class UsersShowController(Resource):
     """ Handles requests for a single user entity """
     def get(self, user_id):
         if not BaseController.authorized(request):
@@ -18,7 +19,7 @@ class UsersShowController(MethodView):
         user_id = int(user_id)
         user = User.query.filter_by(id=user_id).first()
         if user is None:
-            abort(404)
+            abort(404, 'User not found')
         record = {
             'id': user.id,
             'first_name': user.first_name,
@@ -38,7 +39,7 @@ class UsersShowController(MethodView):
         user_id = int(user_id)
         user = User.query.filter_by(id=user_id).first()
         if user is None:
-            abort(404)
+            abort(404, 'User not found')
 
         # Ensure a user is deleting their own user record
         curr_user = BaseController.auth_user(request)
@@ -59,5 +60,4 @@ class UsersShowController(MethodView):
             DB.session.commit()
         DB.session.delete(user)
         DB.session.commit()
-        res = {'status': 204}
-        return jsonify(res)
+        return {'message': 'User Deleted'}, 204

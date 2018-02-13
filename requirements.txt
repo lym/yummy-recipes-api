@@ -20,6 +20,7 @@ flask-migrate==2.1.1
 flask-restful==0.3.6
 flask-shell-bpython==0.0.1
 flask-sqlalchemy==2.3.0
+flask-testing==0.6.2
 flask==0.12.2
 fuzzywuzzy==0.15.1
 greenlet==0.4.12          # via bpython

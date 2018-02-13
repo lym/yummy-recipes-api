@@ -22,6 +22,10 @@ class User(TimestampMixin, DB.Model):
         DB.session.add(self)
         DB.session.commit()
 
+    def delete(self):
+        DB.session.delete(self)
+        DB.session.commit()
+
     def __repr__(self):
         return "<User(fullname='{}', email='{}', password='{}')>".format(
                                 (self.first_name.capitalize() + ' ' + self.last_name.capitalize()),  # NOQA
