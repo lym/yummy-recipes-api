@@ -70,7 +70,7 @@ class RecipesController(Resource):
             'title': saved_recipe.title,
             'description': saved_recipe.description,
             'fulfilled': saved_recipe.fulfilled,
-            'created': saved_recipe.created,
+            'created': saved_recipe.created.strftime('%Y-%m-%d %H:%M:%S'),
             'modified': saved_recipe.modified,
         }
         return result
@@ -153,7 +153,7 @@ class RecipesController(Resource):
                     'user_id'   : recipe.user.id,
                     'title'     : recipe.title,
                     'description': recipe.description,
-                    'created'   : recipe.created,
+                    'created'   : recipe.created.strftime('%Y-%m-%d %H:%M:%S'),
                     'modified'  : recipe.modified,
                     'links'     : {
                         'self': RecipesEndpoint + str(recipe.id) + '/'
@@ -172,7 +172,7 @@ class RecipesController(Resource):
                 'user_id': recipe.user.id,
                 'title': recipe.title,
                 'description': recipe.description,
-                'created': recipe.created,
+                'created': recipe.created.strftime('%Y-%m-%d %H:%M:%S'),
                 'modified': recipe.modified,
                 'links': {
                     'self': RecipesEndpoint + str(recipe.id) + '/'
